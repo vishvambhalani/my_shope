@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagheshwari Jewellers - Your Jewellery Showroom</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .header-bg {
+            background-image: linear-gradient(to right, #a770ef, #cf8bf3, #fbc6e7);
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #cf8bf3, #fbc6e7);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* New button animations for Login/Register forms */
+        .form-submit-btn {
+            background-image: linear-gradient(to right, #a770ef, #cf8bf3);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .form-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .form-submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 50%;
+            transform: scale(1) translate(-50%, -50%);
+            transition: all 0.5s ease-out;
+        }
+        .form-submit-btn:active::after {
+            transform: scale(20) translate(-50%, -50%);
+            opacity: 1;
+        }
+
+
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        /* Ornament animation */
+        .ornament-item {
+            position: relative;
+            overflow: hidden;
+        }
+        .ornament-item img {
+            transition: transform 0.5s ease, filter 0.5s ease;
+            width: 100%; /* Ensure images fill their container */
+            height: 200px; /* Fixed height for consistency */
+            object-fit: cover; /* Cover the area, cropping if necessary */
+        }
+        .ornament-item:hover img {
+            transform: scale(1.1) rotate(2deg); /* Slightly zoom and rotate on hover */
+            filter: brightness(1.1); /* Slight brightness increase */
+        }
+
+        /* Shine effect */
+        .ornament-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: skewX(-20deg);
+            transition: left 0.7s ease-in-out;
+            pointer-events: none; /* Allows clicks to pass through */
+        }
+        .ornament-item:hover::before {
+            left: 125%;
+        }
+
+        .form-input {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't add to the width */
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #fbc6e7;
+            box-shadow: 0 0 0 3px rgba(251, 198, 231, 0.5);
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            position: relative;
+            max-width: 90%;
+            width: 400px; /* Max width for the modal */
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Kuldevi Image Styling */
+        .kuldevi-logo {
+            height: 40px; /* Adjust height as needed */
+            width: auto;
+            margin-right: 10px; /* Space between image and text */
+            border-radius: 8px; /* Slightly rounded corners for the image */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+        }
+
+        @media (max-width: 768px) {
+            .kuldevi-logo {
+                height: 30px; /* Smaller on mobile */
+                margin-bottom: 5px; /* Add some space below on mobile */
+            }
+            .navbar-brand-mobile {
+                flex-direction: column; /* Stack image and text vertically on mobile */
+                align-items: center;
+                text-align: center;
+                padding-top: 10px; /* Add some padding for better mobile look */
+                padding-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="header-bg p-4 shadow-md text-white">
+        <div class="container mx-auto flex justify-between items-center flex-wrap">
+            <a href="#" class="flex items-center rounded-lg px-3 py-1 bg-white text-purple-600 shadow-lg navbar-brand-mobile">
+                <img src="vagheshwarimaa.jpg" alt="Kuldevi Maa Vagheshwari" class="kuldevi-logo">
+                <span class="text-3xl font-bold">Vagheshwari Jewellers</span>
+            </a>
+            <div class="block lg:hidden">
+                <button id="nav-toggle" class="flex items-center px-3 py-2 border rounded text-white border-white hover:text-gray-200 hover:border-border-white">
+                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v15z"/></svg>
+                </button>
+            </div>
+            <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden" id="nav-content">
+                <ul class="text-lg lg:flex-grow lg:flex lg:justify-end">
+                    <li class="mt-4 lg:mt-0 lg:ml-6">
+                        <a href="#home" class="block py-2 px-4 rounded-md hover:bg-white hover:text-purple-700 transition-colors duration-200 nav-link" data-target="home-section">Home</a>
+                    </li>
+                    <li class="mt-4 lg:mt-0 lg:ml-6">
+                        <a href="#login" class="block py-2 px-4 rounded-md hover:bg-white hover:text-purple-700 transition-colors duration-200 nav-link" data-target="login-section">Login</a>
+                    </li>
+                    <li class="mt-4 lg:mt-0 lg:ml-6">
+                        <a href="#register" class="block py-2 px-4 rounded-md hover:bg-white hover:text-purple-700 transition-colors duration-200 nav-link" data-target="registration-section">Register</a>
+                    </li>
+                    <li class="mt-4 lg:mt-0 lg:ml-6">
+                        <button id="contact-us-btn" class="block w-full text-left py-2 px-4 rounded-md bg-white text-purple-700 hover:bg-gray-100 transition-colors duration-200 btn-primary">
+                            Contact Us
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+
+        <!-- Home Section -->
+        <section id="home-section" class="page-section active mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-center mb-10 text-purple-800">Welcome to Vagheshwari Jewellers</h1>
+            <p class="text-lg text-center text-gray-700 max-w-2xl mx-auto mb-12">Discover exquisite craftsmanship and timeless elegance. Each piece tells a story of beauty and sophistication.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Ornament Card 1: Choker Set -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="chokatset.jpeg" alt="Choker Set" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/a770ef/ffffff?text=Choker+Set+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Exquisite Choker Set</h2>
+                    <p class="text-gray-600">A stunning choker set with intricate details, perfect for grand occasions.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+
+                <!-- Ornament Card 2: Elegant Kangan (Bangles) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="kangan.jpeg" alt="Elegant Kangan" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cf8bf3/ffffff?text=Kangan+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Elegant Gold Kangans</h2>
+                    <p class="text-gray-600">Beautifully crafted bangles that add grace to any attire.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+
+                <!-- Ornament Card 3: Traditional Mangalsutra -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="mangalsutra.jpeg" alt="Traditional Mangalsutra" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/fbc6e7/ffffff?text=Mangalsutra+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Traditional Mangalsutra</h2>
+                    <p class="text-gray-600">A symbol of marital bliss, designed with traditional artistry.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+
+                <!-- Ornament Card 4: Modern Mangalsutra -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="mangalsutra'.webp" alt="Modern Mangalsutra" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/a770ef/ffffff?text=Modern+Mangalsutra+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Chic Modern Mangalsutra</h2>
+                    <p class="text-gray-600">Contemporary design for the modern bride.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+
+                <!-- Ornament Card 5: Pearl Ornaments Set -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="pearlsornaments.jpeg" alt="Pearl Ornaments Set" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cf8bf3/ffffff?text=Pearls+Set+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Lustrous Pearl Set</h2>
+                    <p class="text-gray-600">Elegant pearl jewelry that exudes timeless beauty and grace.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+
+                <!-- Ornament Card 6: Gold Wedding Set -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card ornament-item">
+                    <img src="set1.jpeg" alt="Gold Wedding Set" class="w-full h-auto rounded-lg mb-4 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/fbc6e7/ffffff?text=Wedding+Set+Fallback';">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-2">Grand Wedding Set</h2>
+                    <p class="text-gray-600">An exquisite gold set, perfect for bridal wear and grand celebrations.</p>
+                    <button class="mt-4 px-6 py-2 rounded-full text-white btn-primary">View Details</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login-section" class="page-section hidden py-12">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-center mb-6 text-purple-800">Login to Your Account</h2>
+                <form id="login-form">
+                    <div class="mb-5">
+                        <label for="login-email" class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                        <input type="email" id="login-email" name="email" class="form-input" placeholder="Your Email ID" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                        <input type="password" id="login-password" name="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-full text-white font-semibold form-submit-btn">Login</button>
+                </form>
+                <p class="text-center text-gray-600 text-sm mt-6">Don't have an account? <a href="#register" class="text-purple-600 hover:underline nav-link" data-target="registration-section">Register here</a></p>
+            </div>
+        </section>
+
+        <!-- Registration Section -->
+        <section id="registration-section" class="page-section hidden py-12">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-center mb-6 text-purple-800">Create Your Account</h2>
+                <form id="registration-form">
+                    <div class="mb-4">
+                        <label for="register-name" class="block text-gray-700 text-sm font-semibold mb-2">Full Name</label>
+                        <input type="text" id="register-name" name="name" class="form-input" placeholder="Your Full Name" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-email" class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                        <input type="email" id="register-email" name="email" class="form-input" placeholder="Your Email ID" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-password" class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                        <input type="password" id="register-password" name="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="register-confirm-password" class="block text-gray-700 text-sm font-semibold mb-2">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" name="confirm_password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-full text-white font-semibold form-submit-btn">Register</button>
+                </form>
+                <p class="text-center text-gray-600 text-sm mt-6">Already have an account? <a href="#login" class="text-purple-600 hover:underline nav-link" data-target="login-section">Login here</a></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="header-bg p-6 mt-12 text-white text-center shadow-inner">
+        <p>&copy; 2025 Vagheshwari Jewellers. All rights reserved.</p>
+        <div class="flex justify-center space-x-4 mt-2">
+            <a href="#" class="hover:text-gray-200">Privacy Policy</a>
+            <a href="#" class="hover:text-gray-200">Terms of Service</a>
+        </div>
+    </footer>
+
+    <!-- Universal Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="modalMessage" class="text-lg text-center text-gray-800"></p>
+            <div class="flex justify-center mt-6">
+                <button id="modalCloseBtn" class="px-6 py-2 rounded-full text-white btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+            const contactUsBtn = document.getElementById('contact-us-btn');
+            const navToggle = document.getElementById('nav-toggle');
+            const navContent = document.getElementById('nav-content');
+            const loginForm = document.getElementById('login-form');
+            const registrationForm = document.getElementById('registration-form');
+
+            // Modal elements
+            const messageModal = document.getElementById('messageModal');
+            const modalMessage = document.getElementById('modalMessage');
+            const closeButton = document.querySelector('.close-button');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+            // Function to show modal message
+            function showMessageModal(message) {
+                modalMessage.textContent = message;
+                messageModal.style.display = 'flex'; // Use flex to center
+            }
+
+            // Function to hide modal message
+            function hideMessageModal() {
+                messageModal.style.display = 'none';
+            }
+
+            // Close modal events
+            closeButton.onclick = hideMessageModal;
+            modalCloseBtn.onclick = hideMessageModal;
+            window.onclick = function(event) {
+                if (event.target == messageModal) {
+                    hideMessageModal();
+                }
+            };
+
+
+            // Function to show a specific section and hide others
+            const showSection = (targetId) => {
+                pageSections.forEach(section => {
+                    section.classList.add('hidden');
+                    section.classList.remove('active');
+                });
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                    targetSection.classList.add('active');
+                }
+                // Hide mobile nav after selection
+                if (navContent.classList.contains('flex')) {
+                    navContent.classList.remove('flex');
+                    navContent.classList.add('hidden');
+                }
+            };
+
+            // Set initial active section based on URL hash or default to home
+            const initialHash = window.location.hash.substring(1); // Remove '#'
+            if (initialHash && document.getElementById(`${initialHash}-section`)) {
+                showSection(`${initialHash}-section`);
+            } else {
+                showSection('home-section'); // Default to home
+            }
+
+
+            // Navbar navigation handler
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.target.dataset.target;
+                    window.location.hash = targetId.replace('-section', ''); // Update URL hash
+                    showSection(targetId);
+                });
+            });
+
+            // Toggle mobile navigation
+            navToggle.addEventListener('click', () => {
+                navContent.classList.toggle('hidden');
+                navContent.classList.toggle('flex');
+            });
+
+            // Contact Us button functionality
+            contactUsBtn.addEventListener('click', () => {
+                // IMPORTANT: Replace 'YOUR_WHATSAPP_NUMBER' with your actual WhatsApp number,
+                // including the country code, e.g., '+911234567890' or '911234567890'.
+                // If you leave it blank, a message will appear in the modal.
+                const whatsappNumber = '9106464228'; // <-- ADD YOUR WHATSAPP NUMBER HERE!
+                const message = encodeURIComponent("Hello! I'm interested in your jewelry. Could you please provide more information?");
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+                if (whatsappNumber) {
+                    window.open(whatsappUrl, '_blank');
+                } else {
+                    showMessageModal("Please configure your WhatsApp number in the website code to enable this feature. Look for 'whatsappNumber' in the script.");
+                }
+            });
+
+            // Login Form Submission
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+
+                    // Basic validation
+                    if (!email || !password) {
+                        showMessageModal("Please fill in all fields for login.");
+                        return;
+                    }
+
+                    // In a real application, you would send this data to a server for authentication.
+                    // For this example, we'll just simulate a successful login.
+                    console.log('Login attempt:', { email, password });
+                    showMessageModal("Login successful! Welcome back.");
+                    // You might redirect the user or update UI here
+                    setTimeout(() => {
+                        hideMessageModal();
+                        showSection('home-section'); // Redirect to home after login
+                        window.location.hash = 'home';
+                        loginForm.reset(); // Clear form
+                    }, 1500);
+                });
+            }
+
+            // Registration Form Submission
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('register-name').value;
+                    const email = document.getElementById('register-email').value;
+                    const password = document.getElementById('register-password').value;
+                    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                    // Basic validation
+                    if (!name || !email || !password || !confirmPassword) {
+                        showMessageModal("Please fill in all fields for registration.");
+                        return;
+                    }
+
+                    if (password !== confirmPassword) {
+                        showMessageModal("Passwords do not match. Please try again.");
+                        return;
+                    }
+
+                    if (password.length < 6) {
+                        showMessageModal("Password must be at least 6 characters long.");
+                        return;
+                    }
+
+                    // In a real application, you would send this data to a server for user creation.
+                    console.log('Registration attempt:', { name, email, password });
+                    showMessageModal("Registration successful! You can now log in.");
+                    // You might redirect to login page after successful registration
+                    setTimeout(() => {
+                        hideMessageModal();
+                        showSection('login-section'); // Redirect to login after registration
+                        window.location.hash = 'login';
+                        registrationForm.reset(); // Clear form
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
